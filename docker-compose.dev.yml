@@ -1,0 +1,102 @@
+services:
+  postgres:
+    image: postgres
+    hostname: postgres
+    restart: unless-stopped
+    env_file:
+      - ./.env.dev
+    environment:
+      DB_PORT: 5000
+      PGDATA: /data/postgres
+    command: 
+      - -p 5000
+    volumes:
+      - ./postgres_dev_data:/data/postgres
+    ports:
+      - 5000:5000
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U habrpguser -d habrdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - postgres
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    user: root
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      DEBUG: 'False'
+    volumes:
+       - ./pgadmin:/var/lib/pgadmin
+    networks:
+      - postgres
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+
+  backend-dev:
+    depends_on:
+      - postgres
+    hostname: backend
+    environment:
+      - DEBUG=true
+      - DB_HOST=postgres
+      - DB_PORT=5000
+    env_file: 
+      - ./.env.dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    networks:
+      - postgres
+      - nginx
+    ports:
+      - 5001:5001
+    volumes:
+      - ./backend:/app
+
+  notify-dev:
+    hostname: notify
+    environment:
+      - DEBUG=true
+    env_file: 
+      - ./.env.dev
+    build:
+      context: ./services/notify
+      dockerfile: Dockerfile.dev
+    networks:
+      - nginx
+    ports:
+      - 5004:5001
+    volumes:
+      - ./services/notify:/app
+
+  nginx:
+    depends_on:
+      - backend-dev
+      - notify-dev
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    networks:
+      - nginx
+    ports:
+      - 80:80
+
+networks:
+  postgres:
+    driver: bridge
+  nginx:
+    driver: bridge

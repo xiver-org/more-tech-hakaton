@@ -1,0 +1,88 @@
+version: '3.4'
+
+services:
+  postgres:
+    image: postgres
+    hostname: postgres
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      DB_PORT: 5000
+      PGDATA: /data/postgres
+    command: 
+      - -p 5000
+    volumes:
+      - /opt/xiver/projects_data/vault/db/data:/data/postgres
+      - /opt/xiver/projects_data/vault/db/de:/docker-entrypoint-initdb.d
+    ports:
+      - 5000:5010
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U habrpguser -d habrdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - postgres
+
+  backend:
+    depends_on:
+      - postgres
+    hostname: backend
+    environment:
+      - DEBUG=false
+      - DB_HOST=postgres
+      - DB_PORT=5000
+    env_file: 
+      - ./.env
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    networks:
+      - postgres
+      - nginx
+    restart: "on-failure"
+    volumes:
+      - /opt/xiver/projects_data/vault/public:/app/public
+  
+  notify:
+    hostname: notify
+    environment:
+      - DEBUG=false
+    env_file: 
+      - ./.env
+    build:
+      context: ./services/notify
+      dockerfile: Dockerfile
+    networks:
+      - nginx
+    volumes:
+      - /opt/xiver/projects_data/vault/services/notify:/app/logs
+    restart: "on-failure"
+
+  nginx:
+    depends_on:
+      - backend
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    networks:
+      - nginx
+    ports:
+       - 87:80
+    restart: "on-failure"
+  
+  service-test:
+    image: alpine
+    depends_on:
+      - nginx
+      - backend
+      - postgres
+    command: sleep 10s
+
+networks:
+  postgres:
+    driver: bridge
+  nginx:
+    driver: bridge
