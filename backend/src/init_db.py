@@ -2,7 +2,6 @@ from os import system
 
 from loguru import logger
 
-
 __all__ = ("init_db",)
 
 async def init_db() -> None:

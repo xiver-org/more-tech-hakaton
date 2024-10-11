@@ -83,9 +83,9 @@ class DBConfig:
 
     SECRET = get_str_env('SECRET')
     SECRET_MANAGER = get_str_env('SECRET_MANAGER')
-    
+
     ALEMBIC_INIT = get_str_env('ALEMBIC_INIT', 'false')
-    
+
     debug: bool = get_bool_env('DEBUG', True)
 
 config = Config()
