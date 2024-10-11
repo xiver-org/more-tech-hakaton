@@ -83,6 +83,24 @@ services:
     volumes:
       - ./services/notify:/app
 
+  frontend-dev:
+    depends_on:
+      - backend-dev
+    hostname: frontend
+    env_file: 
+      - ./.env.dev
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    networks:
+      - postgres
+      - nginx
+    ports:
+      - 5002:5002
+      - 24678:24678
+    volumes:
+      - ./frontend:/app
+
   nginx:
     depends_on:
       - backend-dev
