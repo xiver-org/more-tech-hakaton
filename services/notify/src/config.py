@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from os import getenv
-from typing import NoReturn
 
 __all__ = ('config',)
 
@@ -21,7 +20,7 @@ class CannotRecognizeBoolEnv(Exception):  # noqa: N818
         super().__init__(msg)
 
 
-def get_bool_env(env_name: str, default: bool | None = None) -> bool | NoReturn:
+def get_bool_env(env_name: str, default: bool | None = None) -> bool:
     env_value = getenv(env_name, None)
     if env_value is None and default is None:
         raise EnvVariableUndefined(env_name)
@@ -38,7 +37,7 @@ def get_bool_env(env_name: str, default: bool | None = None) -> bool | NoReturn:
     raise CannotRecognizeBoolEnv(env_name, env_value)
 
 
-def get_str_env(env_name: str, default: str | None = None) -> str | NoReturn:
+def get_str_env(env_name: str, default: str | None = None) -> str:
     env_value = getenv(env_name, None)
     if env_value is None and default is None:
         raise EnvVariableUndefined(env_name)
@@ -49,7 +48,7 @@ def get_str_env(env_name: str, default: str | None = None) -> str | NoReturn:
     return env_value
 
 
-def get_int_env(env_name: str, default: int | None = None) -> str | NoReturn:
+def get_int_env(env_name: str, default: int | None = None) -> str:
     env_value = getenv(env_name, None)
     if env_value is None and default is None:
         raise EnvVariableUndefined(env_name)
