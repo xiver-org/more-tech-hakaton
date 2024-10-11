@@ -32,7 +32,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
-select = [
+lint.select = [
     "F",   # https://beta.ruff.rs/docs/rules/#pyflakes-f
     "W",   # https://beta.ruff.rs/docs/rules/#warning-w
     "E",   # https://beta.ruff.rs/docs/rules/#error-e
@@ -45,12 +45,12 @@ select = [
 ]
 include = ["*.py"]
 force-exclude = true
-fixable = ["ALL"]
+lint.fixable = ["ALL"]
 
 exclude = [".mypy_cache", ".ruff_cache", ".venv", "__pypackages__", "alembic", "backend/solutions"]
 line-length = 120
 
-ignore = [
+lint.ignore = [
     "B008",  # do not perform function calls in argument defaults
     "ANN101",  # Missing type annotation for `self` in method
     "RUF009",  # Do not perform function call `get_str_env` in dataclass defaults
