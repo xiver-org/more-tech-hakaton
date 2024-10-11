@@ -1,0 +1,45 @@
+// * colors of theme
+$color1: #001a65;
+$color2: #a9e4ee;
+$color3: #3ecdef;
+$color4: #fd1d75;
+$color5: #a55ccc;
+$color6: #f601c0;
+
+
+
+// * Config variables
+
+$sec-float-bc: #ece9e9b9;
+$sec-float-border-radius: 1px solid #adadad7e;
+
+$brand-color: #3ecdef;
+$brand-color-hover: #a9e4ee;
+
+
+
+// * Global custom styles
+body {
+    background-color: $color1;
+    color: $color2;
+}
+
+button {
+    background-color: #fd1d75;
+}
+
+.second-float {
+    background-color: $sec-float-bc;
+    border: $sec-float-border-radius;
+}
+
+a {
+    color: $color2;
+}
+
+a:hover,
+a:active,
+a:focus-visible,
+a:focus {
+    color: $color3;
+}
