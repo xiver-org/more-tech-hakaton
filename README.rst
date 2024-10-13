@@ -21,7 +21,7 @@ Developing
 
 .. code-block:: shell
 
-    git clone https://github.com/xiver-org/more-tech-hakaton.git; cd more-tech-hakaton-master
+    git clone https://github.com/xiver-org/vault.git; cd vault-master
     cp .env.example .env.dev
     make
 
@@ -37,6 +37,8 @@ Prodaction
 
 .. code-block:: shell
 
-    git clone https://github.com/xiver-org/more-tech-hakaton.git; cd more-tech-hakaton-master
+    mkdir /opt/xiver
+    cd /opt/xiver
+    git clone https://github.com/xiver-org/vault.git; cd vault-master
     cp .env.example .env
     make DEV=0
