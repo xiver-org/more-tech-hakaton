@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     ssrBaseApiUrl: import.meta.env.SSR_API_BASE_URL
   },
   css: ['~/assets/css/main.css'],
-  modules: [],
+  modules: ['@nuxt/ui'],
   postcss: {
     plugins: {
       tailwindcss: {},
